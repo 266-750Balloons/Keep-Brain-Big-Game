@@ -32,6 +32,8 @@ var start, keybuffer;
 
 var lives = 3;
 
+var score = 0;
+
 var windowResize = window.addEventListener('resize', updateCanvasSize);
 var detectKey = window.addEventListener('keydown', getInput);
 var resetKey = window.addEventListener('keyup', resetInput);
@@ -40,6 +42,9 @@ var mainContext = mainCanvas.getContext("2d");
 
 var player = new gameItem(100, 100, 0, 0, 255, 0, 0);
 player.drawItem();
+
+var badGuy = new gameItem(100, 100, document.body.clientWidth-100, 0, 0, 255, 255);
+badGuy.drawItem();
 
 function updateCanvasSize() {
     mainCanvas.style.width = document.body.clientWidth.toString()+"px";
@@ -81,8 +86,21 @@ function test(timestamp) {
     } else if (player.y < 0) {
         player.y = 0;
     }
+    badGuy.drawItem();
+    if (player.collision(badGuy) === true) {
+        badGuy.x = document.body.clientWidth ;
+        badGuy.y = Math.floor(Math.random()*(document.body.clientHeight-100));
+        lives--;
+    }
+    badGuy.x -= 10;
+    if(badGuy.x < -100) {
+        badGuy.x = document.body.clientWidth;
+        badGuy.y = Math.floor(Math.random()*(document.body.clientHeight-100));
+        score += 100;
+    }
     mainContext.fillStyle = "#000000";
     mainContext.fillText("Lives: "+lives.toString(), document.body.clientWidth-200, 50);
+    mainContext.fillText("Score: "+score.toString(), 10, 50)
     window.requestAnimationFrame(test);
 }
 
