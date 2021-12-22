@@ -86,13 +86,13 @@ function test(timestamp) {
     } else if (player.y < 0) {
         player.y = 0;
     }
-    badGuy.drawItem();
     if (player.collision(badGuy) === true) {
         badGuy.x = document.body.clientWidth ;
         badGuy.y = Math.floor(Math.random()*(document.body.clientHeight-100));
         lives--;
     }
-    badGuy.x -= 10;
+    badGuy.drawItem();
+    badGuy.x -= 10 + (score * 0.005);
     if(badGuy.x < -100) {
         badGuy.x = document.body.clientWidth;
         badGuy.y = Math.floor(Math.random()*(document.body.clientHeight-100));
@@ -100,8 +100,12 @@ function test(timestamp) {
     }
     mainContext.fillStyle = "#000000";
     mainContext.fillText("Lives: "+lives.toString(), document.body.clientWidth-200, 50);
-    mainContext.fillText("Score: "+score.toString(), 10, 50)
-    window.requestAnimationFrame(test);
+    mainContext.fillText("Score: "+score.toString(), 10, 50);
+    if(lives !== 0) {
+        window.requestAnimationFrame(test);
+    } else {
+        mainContext.fillText("Game Over", 0.5*document.body.clientWidth, 0.5*document.body.clientHeight);
+    }
 }
 
 window.requestAnimationFrame(test);
