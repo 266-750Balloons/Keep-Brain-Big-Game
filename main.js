@@ -34,6 +34,8 @@ var lives = 3;
 
 var score = 0;
 
+var nomovement = 0;
+
 var windowResize = window.addEventListener('resize', updateCanvasSize);
 var detectKey = window.addEventListener('keydown', getInput);
 var resetKey = window.addEventListener('keyup', resetInput);
@@ -82,6 +84,8 @@ function test(timestamp) {
         player.y += 10;
     } else if (keybuffer === "up") {
         player.y -= 10;
+    } else {
+        nomovement ++;
     }
     if (player.y + player.height > document.body.clientHeight) {
         player.y = document.body.clientHeight - player.height;
@@ -98,7 +102,12 @@ function test(timestamp) {
         badGuys[i].x -= 10 + (score * 0.001);
         if (badGuys[i].x < -100) {
             badGuys[i].x = document.body.clientWidth;
-            badGuys[i].y = Math.floor(Math.random() * (document.body.clientHeight - 100));
+            if(nomovement < 60) {
+                badGuys[i].y = Math.floor(Math.random() * (document.body.clientHeight - 100));
+            } else {
+                badGuys[i].y = player.y + Math.floor(Math.random() * 100);
+                nomovement = 0;
+            }
             score += 20;
         }
     }
